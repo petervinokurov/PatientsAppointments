@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PatientsAppointments.Entities
 {
@@ -8,6 +10,14 @@ namespace PatientsAppointments.Entities
 
         public string Name { get; set; }
 
-        public IEnumerable<Appointment> Appointments { get; set; }
+        public IEnumerable<Appointment> Appointments { get; set; } = new List<Appointment>();
+
+        public Appointment ClosestAppointment
+        {
+            get
+            {
+                return Appointments.OrderByDescending(x => x.AppointmentDate).FirstOrDefault();
+            }
+        }
     }
 }

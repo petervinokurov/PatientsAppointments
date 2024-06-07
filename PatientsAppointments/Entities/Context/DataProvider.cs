@@ -26,9 +26,9 @@ namespace PatientsAppointments.Entities.Context
             var patientFaker = new Faker<Patient>()
                 .RuleFor(u => u.Id, f => patientId++)
                 .RuleFor(u => u.Name, f => f.Name.FullName())
-                .RuleFor(u=>u.Appointments, f => appointmentFaker.Generate(f.Random.Int(1,5)));
+                .RuleFor(u=>u.Appointments, f => appointmentFaker.Generate(f.Random.Int(5,10)));
             
-            Patients = patientFaker.Generate(1000);
+            Patients = patientFaker.Generate(10000);
         }
     }
 }
