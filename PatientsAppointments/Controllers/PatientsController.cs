@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using PatientsAppointments.Entities;
 using PatientsAppointments.Entities.Context;
+using PatientsAppointments.Responses;
 
 namespace PatientsAppointments.Controllers
 {
@@ -16,9 +18,13 @@ namespace PatientsAppointments.Controllers
         }
         
         // GET
-        public IEnumerable<Patient> GetPatients()
+        public ApplicationResponse<Patient> GetPatients(int pageNumber)
         {
-            return _dataProvider.Patients;
+            return new ApplicationResponse<Patient>
+            {
+                TotalPages = _dataProvider.Patients.Count() / 10,
+                Items = _dataProvider.Patients.OrderBy(x => x.ClosestAppointment.AppointmentDate).Skip((pageNumber - 1) * 10).Take(10).ToList()
+            };
         }
     }
 }

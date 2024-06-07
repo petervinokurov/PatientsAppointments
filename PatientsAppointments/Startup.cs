@@ -13,6 +13,18 @@ namespace PatientsAppointments
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IDataProvider, DataProvider>();
+            
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+            
             services.AddControllers();
         }
 
@@ -24,8 +36,10 @@ namespace PatientsAppointments
                 app.UseDeveloperExceptionPage();
             }
             
+            app.UseHttpsRedirection();
             app.UseRouting();
-
+            app.UseCors("AllowSpecificOrigin");
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
