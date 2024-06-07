@@ -6,3 +6,18 @@ PatientsAppointments/bin/Debug/net5.0/
 PatientsAppointments/obj/Debug/net5.0/
 
 PatientsAppointments/obj/
+
+*.pack
+
+patientsappointments.react/node_modules/
+
+patientsappointments.react/build/static/js/
+
+patientsappointments.react/node_modules/.bin/
+
+patientsappointments.react/node_modules/.cache/
+
+.idea/.idea.PatientsAppointments/.idea/
+
+patientsappointments.react/build/
+
