@@ -1,0 +1,8 @@
+
+*.dll
+
+PatientsAppointments/bin/Debug/net5.0/
+
+PatientsAppointments/obj/Debug/net5.0/
+
+PatientsAppointments/obj/
