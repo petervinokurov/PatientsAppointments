@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using PatientsAppointments.Responses;
 namespace PatientsAppointments.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class PatientsController : Controller
     {
         private readonly IDataProvider _dataProvider;
@@ -18,13 +19,34 @@ namespace PatientsAppointments.Controllers
         }
         
         // GET
-        public ApplicationResponse<Patient> GetPatients(int pageNumber)
+        public ApplicationResponse<Patient> PatientsList(int page, string query)
         {
-            return new ApplicationResponse<Patient>
+            const int pageSize = 10;
+
+            IQueryable<Patient> queryablePatients = _dataProvider.Patients.AsQueryable();
+
+            if (!string.IsNullOrEmpty(query))
             {
-                TotalPages = _dataProvider.Patients.Count() / 10,
-                Items = _dataProvider.Patients.OrderBy(x => x.ClosestAppointment.AppointmentDate).Skip((pageNumber - 1) * 10).Take(10).ToList()
+                queryablePatients = queryablePatients.Where(p => p.Name.Contains(query));
+            }
+
+            int totalCount = queryablePatients.Count();
+
+            List<Patient> patients = queryablePatients
+                .OrderBy(x => x.ClosestAppointment.AppointmentDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            var result = new ApplicationResponse<Patient>
+            {
+                Items = patients,
+                TotalPages = totalPages
             };
+
+            return result;
         }
     }
 }
