@@ -32,9 +32,9 @@ const PatientsListComponent = () => {
 		}
 	  }, [endPoint]);
 	
-	  useEffect(() => {
+	useEffect(() => {
 		fetchData(currentPage, '');
-	  }, [currentPage, fetchData]); 
+	}, [currentPage, fetchData]); 
 
 	if (loading) {
 		return <p>Loading...</p>;
@@ -61,7 +61,7 @@ const PatientsListComponent = () => {
 	  };
 	
 	  const handleSuggestionsFetchRequested = async ({ value }) => {
-		if (value.length < 3) {
+		if (isNaN(value) && value.length < 3) {
 			setSuggestions([]);
 			return;
 		}
