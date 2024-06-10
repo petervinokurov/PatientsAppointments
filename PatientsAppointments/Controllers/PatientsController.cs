@@ -23,16 +23,18 @@ namespace PatientsAppointments.Controllers
         {
             const int pageSize = 10;
 
-            IQueryable<Patient> queryablePatients = _dataProvider.Patients.AsQueryable();
+            IEnumerable<Patient> queryablePatients = _dataProvider.Patients;
 
             if (!string.IsNullOrEmpty(query))
             {
-                queryablePatients = queryablePatients.Where(p => p.Name.Contains(query));
+                int.TryParse(query, out int parsedId);
+                queryablePatients = queryablePatients.Where(p => p.Name.Contains(query) || p.Id == parsedId);
             }
+            var materializedPatients = queryablePatients.ToList();
 
-            int totalCount = queryablePatients.Count();
+            int totalCount = materializedPatients.Count();
 
-            List<Patient> patients = queryablePatients
+            List<Patient> patients = materializedPatients
                 .OrderBy(x => x.ClosestAppointment.AppointmentDate)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
