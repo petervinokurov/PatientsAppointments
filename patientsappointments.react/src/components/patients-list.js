@@ -15,7 +15,7 @@ const PatientsListComponent = () => {
 
 
     const fetchData = useCallback(async (page, query) => {
-		setLoading(true);
+	    setLoading(true);
 		try {
 		  const response = await axios.get(endPoint, {
 			params: {
@@ -32,23 +32,23 @@ const PatientsListComponent = () => {
 		}
 	  }, [endPoint]);
 	
-	useEffect(() => {
+	  useEffect(() => {
 		fetchData(currentPage, '');
-	}, [currentPage, fetchData]); 
+	  }, [currentPage, fetchData]); 
 
-	if (loading) {
+	  if (loading) {
 		return <p>Loading...</p>;
-	}
+	  }
 	
-	if (error) {
+	  if (error) {
 		return <p>Error: {error}</p>;
-	}
+	  }
 
-	const handlePreviousPage = () => {
+	  const handlePreviousPage = () => {
 		if (currentPage > 1) {
 		  setCurrentPage(currentPage - 1);
 		}
-	  };
+	    };
 	
 	  const handleNextPage = () => {
 		if (currentPage < totalPages) {
@@ -107,7 +107,6 @@ const PatientsListComponent = () => {
 		onChange: handleChange,
 	  };
 
-	
   return (
 	<div>
       <form onSubmit={handleSubmit}>
