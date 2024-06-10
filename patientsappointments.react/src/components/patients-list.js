@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import Autosuggest from 'react-autosuggest';
@@ -14,27 +14,27 @@ const PatientsListComponent = () => {
 	const endPoint = `https://localhost:5001/api/patients/patientsList`;
 
 
-    const fetchData = async (page, searchValue = '') => {
+    const fetchData = useCallback(async (page, query) => {
 		setLoading(true);
 		try {
 		  const response = await axios.get(endPoint, {
 			params: {
 			  page: page,
-			  query: searchValue // Added search parameter
+			  query: query
 			}
 		  });
-		  setData(response.data.items); // Assuming the response has an 'items' field with the data
-		  setTotalPages(response.data.totalPages); // Assuming the response has a 'totalPages' field
-		  setLoading(false);
+		  setData(response.data.items);
+		  setTotalPages(response.data.totalPages);
 		} catch (err) {
 		  setError(err.message);
+		} finally {
 		  setLoading(false);
 		}
-    };
-
-	useEffect(() => {
-	  fetchData(currentPage);
-	}, [currentPage]); 
+	  }, [endPoint]);
+	
+	  useEffect(() => {
+		fetchData(currentPage, '');
+	  }, [currentPage, fetchData]); 
 
 	if (loading) {
 		return <p>Loading...</p>;
@@ -74,10 +74,10 @@ const PatientsListComponent = () => {
 			}
 		  });
 		  
-		  setSuggestions(response.data.items || []); // Ensure suggestions is an array
+		  setSuggestions(response.data.items || []);
 		} catch (err) {
 		  console.error('Error fetching suggestions:', err);
-		  setSuggestions([]); // Reset suggestions on error
+		  setSuggestions([]);
 		}
 	  };
 	
@@ -85,20 +85,20 @@ const PatientsListComponent = () => {
 		setSuggestions([]);
 	  };
 	
-	  const getSuggestionValue = (suggestion) => suggestion.name; // Assuming the suggestion object has a 'name' field
+	  const getSuggestionValue = (suggestion) => suggestion.name; 
 	
-	  const renderSuggestion = (suggestion) => <div>{suggestion.name}</div>; // Assuming the suggestion object has a 'name' field
+	  const renderSuggestion = (suggestion) => <div>{suggestion.name}</div>;
 	
 	  const onSuggestionSelected = (_, { suggestion }) => {
 		setSearchValue(suggestion.name);
 		setCurrentPage(1);
-		fetchData(1, suggestion.name); // Fetch data based on the selected suggestion
+		fetchData(1, suggestion.name); 
 	  };
 	
 	  const handleSubmit = (event) => {
 		event.preventDefault();
 		setCurrentPage(1);
-		fetchData(1, searchValue); // Perform search with the searchValue
+		fetchData(1, searchValue);
 	  };
 	
 	  const inputProps = {
