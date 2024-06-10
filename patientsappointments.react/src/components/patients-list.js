@@ -126,7 +126,6 @@ const PatientsListComponent = () => {
         <tr>
           <th>Name</th>
           <th>Closest Appointment</th>
-		  <th>Meeting Type</th>
         </tr>
       </thead>
       <tbody>
@@ -134,7 +133,6 @@ const PatientsListComponent = () => {
           <tr key={index}>
             <td>{row.name}</td>
 			<td>{moment(row.closestAppointment.appointmentDate).format('MM/DD/YYYY hh:mm:ss')}</td>
-			<td>{row.closestAppointment.meetingType.name}</td>
           </tr>
         ))}
       </tbody>
