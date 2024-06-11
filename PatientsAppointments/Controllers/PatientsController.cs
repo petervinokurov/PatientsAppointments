@@ -25,6 +25,8 @@ namespace PatientsAppointments.Controllers
 
             IEnumerable<Patient> queryablePatients = _dataProvider.Patients;
 
+            queryablePatients = queryablePatients.Where(x => x.ClosestAppointment.AppointmentDate > DateTime.Today);
+
             if (!string.IsNullOrEmpty(query))
             {
                 int.TryParse(query, out int parsedId);
